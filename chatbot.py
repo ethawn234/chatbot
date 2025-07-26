@@ -1,14 +1,15 @@
 import os
 
+from langchain_openai import OpenAIEmbeddings
 import streamlit as st
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_ollama import OllamaEmbeddings
 from langchain_community.vectorstores import FAISS
+from langchain_core.vectorstores import InMemoryVectorStore
+
 from dotenv import load_dotenv
 load_dotenv()
-
-api_key = os.environ.get("OPENAI_API_KEY")
 
 # Upload PDF files
 st.header('My Chatbot')
@@ -38,11 +39,20 @@ if file is not None:
   # st.write(chunks)
 
   # generate embeddings
-  embeddings = OpenAIEmbeddings(api_key=api_key)  # configure api key usage via .env
+  embeddings = OllamaEmbeddings(
+    model="nomic-embed-text:latest"
+  )
 
   # create vector store (FAISS: Facebook Semantic Search)
-  # FAISS is doing 3 things here:
-  # 1. generates embeddings
-  # 2. initializes FAISS
-  # 3. stores the chunks & embeddings
   vector_store = FAISS.from_texts(chunk, embeddings)
+  st.write(vector_store)
+
+  # get user query
+  user_query = st.text_input("What's your question?")
+
+  # do similarity search
+  if user_query:
+    match = vector_store.similarity_search(user_query)
+    # st.write(match)
+
+    # define the LLM
