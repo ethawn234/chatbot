@@ -1,12 +1,12 @@
 import os
 
-from langchain_openai import OpenAIEmbeddings
 import streamlit as st
 from PyPDF2 import PdfReader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
+from langchain_ollama import ChatOllama
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_core.vectorstores import InMemoryVectorStore
+from langchain.chains.question_answering import load_qa_chain
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -45,7 +45,7 @@ if file is not None:
 
   # create vector store (FAISS: Facebook Semantic Search)
   vector_store = FAISS.from_texts(chunk, embeddings)
-  st.write(vector_store)
+  # st.write(vector_store)
 
   # get user query
   user_query = st.text_input("What's your question?")
@@ -56,3 +56,13 @@ if file is not None:
     # st.write(match)
 
     # define the LLM
+    llm = ChatOllama(
+      model='llama3.2:latest',
+      temperature=0
+    )
+
+    # output response
+    # chain -> take the query, get relevant document, pass to LLM, generate output
+    chain = load_qa_chain(llm, chain_type="stuff")
+    response = chain.run(input_documents = match, question = user_query)
+    st.write(response)
