@@ -1,0 +1,4 @@
+
+Chatbots trained on:
+- DR
+- Code Analysis eg ingests all org repos & can be queried eg "What is the CI flow?"

@@ -1,0 +1,7 @@
+pip install -qu:
+  -q: Runs the installation in quiet mode, suppressing most output.
+  -u: Ensures that the package is upgraded to the latest version if already installed.
+
+pipdeptree -f --warn silence | grep -E '^[a-zA-Z0-9\-]+' > requirements.txt:
+  - pipdeptree is a pkg that provides a graph of package dependencies
+  - above command prunes for top level dependencies & writes to file
