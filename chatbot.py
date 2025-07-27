@@ -1,14 +1,18 @@
-import os
-
-import streamlit as st
+# source 
 from PyPDF2 import PdfReader
+
+# common
+import streamlit as st
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
+from langchain.chains.question_answering import load_qa_chain
+
+# chatbot
+from langchain_ollama import OllamaEmbeddings
+from langchain_ollama import ChatOllama
+
 from dotenv import load_dotenv
 load_dotenv()
-
-api_key = os.environ.get("OPENAI_API_KEY")
 
 # Upload PDF files
 st.header('My Chatbot')
@@ -23,7 +27,6 @@ if file is not None:
   text = ''
   for page in pdf_reader.pages:
     text += page.extract_text()
-    # st.write(text)
 
   # Chunk the text;
   # Purpose: chunking the text helps Open AI understand the text
@@ -35,14 +38,27 @@ if file is not None:
   )
 
   chunk = text_splitter.split_text(text)
-  # st.write(chunks)
 
   # generate embeddings
-  embeddings = OpenAIEmbeddings(api_key=api_key)  # configure api key usage via .env
+  embeddings = OllamaEmbeddings(
+    model="nomic-embed-text:latest"
+  )
 
-  # create vector store (FAISS: Facebook Semantic Search)
-  # FAISS is doing 3 things here:
-  # 1. generates embeddings
-  # 2. initializes FAISS
-  # 3. stores the chunks & embeddings
+  # create vector store
   vector_store = FAISS.from_texts(chunk, embeddings)
+
+  # get user query
+  user_query = st.text_input("What's your question?")
+
+  # do similarity search
+  if user_query:
+    match = vector_store.similarity_search(user_query)
+
+    # define the LLM
+    llm = 
+
+    # output response
+    # chain -> take the query, get relevant document, pass to LLM, generate output
+    chain = load_qa_chain(llm, chain_type="stuff")
+    response = chain.run(input_documents = match, question = user_query)
+    st.write(response)
