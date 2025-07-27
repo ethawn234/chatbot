@@ -1,4 +1,4 @@
-pip install -qu:
+pip install -qu <package>:
   -q: Runs the installation in quiet mode, suppressing most output.
   -u: Ensures that the package is upgraded to the latest version if already installed.
 
