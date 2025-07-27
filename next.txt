@@ -1,0 +1,2 @@
+1. Verify chatbot is isolated & no data is sent externally
+2. Speed up response time
