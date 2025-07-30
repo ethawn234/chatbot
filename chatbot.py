@@ -1,5 +1,4 @@
 import streamlit as st
-# from PyPDF2 import PdfReader
 from pypdf import PdfReader
 from langchain_ollama import OllamaEmbeddings
 from langchain_ollama import ChatOllama
@@ -51,14 +50,14 @@ if file is not None:
 
     # do similarity search
     if user_query:
-        match = vector_store.similarity_search(user_query)
-        # st.write(match)
+      match = vector_store.similarity_search(user_query)
+      # st.write(match)
 
-        # define the LLM
-        llm = ChatOllama(model="mistral:v0.3", temperature=0.0)
+      # define the LLM
+      llm = ChatOllama(model="mistral:v0.3", temperature=0.0)
 
-        # output response
-        # chain -> take the query, get relevant document, pass to LLM, generate output
-        chain = load_qa_chain(llm, chain_type="stuff")
-        response = chain.run(input_documents = match, question = user_query)
-        st.write(response)
+      # output response
+      # chain -> take the query, get relevant document, pass to LLM, generate output
+      chain = load_qa_chain(llm, chain_type="stuff")
+      response = chain.run(input_documents=match, question=user_query)
+      st.write(response)
