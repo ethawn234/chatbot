@@ -18,6 +18,8 @@ with st.sidebar:
 
 # Read PDF file
 if file is not None:
+    # cache pdf read, text formatting, chunking if possible to speed up response
+    # chatgpt's example writes to file FAISS output; 1st run, write; 2nd run load from file
     pdf_reader = PdfReader(file)
     text = ''
     for page in pdf_reader.pages:
