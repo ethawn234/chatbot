@@ -27,19 +27,19 @@ if file is not None:
     # Chunk the text;
     # Purpose: chunking the text helps Open AI understand the text
     text_splitter = RecursiveCharacterTextSplitter(
-    separators='\n',
-    chunk_size=1000,
-    chunk_overlap=150,  # defines overlap between chunks; eg chunk B may lose context as B may start mid-sentence, and context is contained in a sentence in A.
-    length_function=len
-  )
+      separators='\n',
+      chunk_size=1000,
+      chunk_overlap=150,  # defines overlap between chunks; eg chunk B may lose context as B may start mid-sentence, and context is contained in a sentence in A.
+      length_function=len
+    )
 
     chunk = text_splitter.split_text(text)
     # st.write(chunks)
 
     # generate embeddings
     embeddings = OllamaEmbeddings(
-    model="nomic-embed-text:latest"
-  )
+      model="nomic-embed-text:latest"
+    )
 
     # create vector store (FAISS: Facebook Semantic Search)
     vector_store = FAISS.from_texts(chunk, embeddings)
